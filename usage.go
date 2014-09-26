@@ -38,13 +38,55 @@ type UsageFilter struct {
 	Category, StartDate, EndDate string
 }
 
-// ideal api: twilio.UsageRecords(gotwilio.UsageFilter{Category: "test"}).daily()
-
-// UsageRecords retreives all UsageRecord's at a subresource if provided, defaulting to the list resource,
-// with the given filter parameters, if provided.
+// UsageRecords returns all UsageRecord's at the list resource, with the given filter parameters, if provided.
 // The error returned results from a misformatted url, failed http request, or bad JSON.
-// The exception is an error from Twilio.
-func (twilio *Twilio) UsageRecords(subresource string, filter *UsageFilter) (*UsageRecords, *Exception, error) {
+// The exception is an error from the Twilio API.
+func (twilio *Twilio) UsageRecords(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("", filter)
+}
+
+// UsageRecordsDaily returns UsageRecord's over a daily time interval
+func (twilio *Twilio) UsageRecordsDaily(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("Daily", filter)
+}
+
+// UsageRecordsMonthly returns UsageRecord's over a monthly time interval
+func (twilio *Twilio) UsageRecordsMonthly(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("Monthly", filter)
+}
+
+// UsageRecordsYearly returns UsageRecord's over a yearly time interval
+func (twilio *Twilio) UsageRecordsYearly(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("Yearly", filter)
+}
+
+// UsageRecordsAllTime is equivalent to UsageRecords
+func (twilio *Twilio) UsageRecordsAllTime(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("AllTime", filter)
+}
+
+// UsageRecordsToday returns UsageRecord's for today's usage
+func (twilio *Twilio) UsageRecordsToday(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("Today", filter)
+}
+
+// UsageRecordsYesterday returns UsageRecord's for yesterday's usage
+func (twilio *Twilio) UsageRecordsYesterday(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("Yesterday", filter)
+}
+
+// UsageRecordsThisMonth returns UsageRecord's for this months's usage
+func (twilio *Twilio) UsageRecordsThisMonth(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("ThisMonth", filter)
+}
+
+// UsageRecordsLastMonth returns UsageRecord's for last months's usage
+func (twilio *Twilio) UsageRecordsLastMonth(filter *UsageFilter) (*UsageRecords, *Exception, error) {
+	return usageRecords("LastMonth", filter)
+}
+
+// This is a private method that retrieves the specified UsageRecord's
+func usageRecords(subresource string, filter *UsageFilter) (*UsageRecords, *Exception, error) {
 	var (
 		usageRecords *UsageRecords
 		exception    *Exception
