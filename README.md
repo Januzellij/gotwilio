@@ -1,17 +1,17 @@
 ## Overview
-This is the start of a library for [Twilio](http://www.twilio.com/). Gotwilio supports making voice calls, sending text messages, validating requests, and creating TWiML responses.
+This is an unofficial Go API library for [Twilio](http://www.twilio.com/). Gotwilio supports making voice calls, sending text messages, validating requests, creating TWiML responses, and various REST resources.
 
 ## License
 Gotwilio is licensed under a BSD license.
 
 ## Installation
-To install gotwilio, simply run `go get github.com/Januzellij/gotwilio`, until the original author has merged my pull request.
+To install gotwilio, run `go get github.com/Januzellij/gotwilio`.
 
 ## Getting Started
-Just create a Twilio client with either `NewTwilioClient(accountSid, authToken)` or `NewTwilioClientFromEnvironment()`, and store the accountSid and authToken in `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` environment variables, respectively.
+Just create a Twilio client with either `NewTwilioClient(accountSid, authToken)` or `NewTwilioClientFromEnvironment()`, and store the accountSid and authToken in `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` environment variables, respectively. For security purposes, please use `NewTwilioClientFromEnvironment()` in any open source code.
 
 ## Docs
-The documentation can be found at http://godoc.org/github.com/Januzellij/gotwilio
+All documentation can be found at http://godoc.org/github.com/Januzellij/gotwilio
 
 ## SMS Example
 
@@ -57,14 +57,17 @@ func main() {
 package main
 
 import (
-	"github.com/Januzellij/gotwilio"
+	"log"
 	"net/http"
+
+	"github.com/Januzellij/gotwilio"
 )
 
 func root(w http.ResponseWriter, r *http.Request) {
 	twilio, err := NewTwilioClientFromEnv()
 	if err != nil {
-		panic(err)
+		// one or more environment variables are missing
+		log.Fatal(err)
 	}
 	url := "http://example.com/"
 	err = gotwilio.Validate(r, url, twilio.authToken)
@@ -85,8 +88,10 @@ func main() {
 package main
 
 import (
-	"github.com/Januzellij/gotwilio"
+	"log"
 	"os"
+
+	"github.com/Januzellij/gotwilio"
 )
 
 func main() {
@@ -95,31 +100,40 @@ func main() {
 	resp := gotwilio.NewTwimlResponse(newSay, newPause)
 	err := resp.SendTwimlResponse(os.Stdout) // when using Twiml in a real web app, this would actually be written to a http.ResponseWriter.
 	if err != nil {
-		// your verbs were invalid XML
+		// something other than TWiML verbs was given to the TWiML response
+		log.Fatal(err)
 	}
 }
 ```
 
-## UsageRecord Example
+## Usage Record Example
 
 ```go
 package main
 
 import (
 	"fmt"
+	"log"
+	
 	"github.com/Januzellij/gotwilio"
 )
 
 func main() {
 	twilio, err := gotwilio.NewTwilioClientFromEnv()
-	if err == nil {
-		filter := &gotwilio.UsageFilter{StartDate: "2012-6-4", EndDate: "2014-1-1"}
-		records, exception, recordErr := twilio.UsageRecords("Daily", filter)
-		if records != nil {
-			for _, record := range records.UsageRecords {
-				fmt.Printf("Category: %s, Usage: %d \n", record.Category, record.Usage)
-			}
+	if err != nil {
+		log.Fatal(err)
+	}
+	filter := &gotwilio.UsageFilter{StartDate: "2012-6-4", EndDate: "2014-1-1"}
+	records, exception, err := twilio.DailyUsageRecords(filter)
+	if records != nil {
+		for _, record := range records.UsageRecords {
+			fmt.Printf("Category: %s, Usage: %d \n", record.Category, record.Usage)
 		}
+	} else if exception != nil {
+		log.Fatal(*exception)
+	} else {
+		// the only option left is that the error != nil
+		log.Fatal(err)
 	}
 }
 ```
