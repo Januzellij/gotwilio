@@ -11,7 +11,7 @@ To install gotwilio, run `go get github.com/Januzellij/gotwilio`.
 Just create a Twilio client with either `NewTwilioClient(accountSid, authToken)` or `NewTwilioClientFromEnvironment()`, and store the accountSid and authToken in `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` environment variables, respectively. For security purposes, please use `NewTwilioClientFromEnvironment()` in any open source code.
 
 ## Docs
-All documentation can be found at http://godoc.org/github.com/Januzellij/gotwilio
+All documentation can be found <a href="http://godoc.org/github.com/Januzellij/gotwilio" target="_blank">here</a>
 
 ## SMS Example
 
@@ -114,7 +114,7 @@ package main
 import (
 	"fmt"
 	"log"
-	
+
 	"github.com/Januzellij/gotwilio"
 )
 
