@@ -18,7 +18,11 @@ All documentation can be found <a href="http://godoc.org/github.com/Januzellij/g
 ```go
 package main
 
-import "github.com/Januzellij/gotwilio"
+import (
+	"log"
+
+	"github.com/Januzellij/gotwilio"
+)
 
 func main() {
 	accountSid := "ABC123..........ABC123"
@@ -28,7 +32,13 @@ func main() {
 	from := "+15555555555"
 	to := "+15555555555"
 	message := "Welcome to gotwilio!"
-	twilio.SendSMS(from, to, message, "", "")
+	_, exception, err := twilio.SendSMS(from, to, message, "", "")
+	if exception != nil {
+		log.Fatal(*exception)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```
 	
@@ -47,7 +57,13 @@ func main() {
 	from := "+15555555555"
 	to := "+15555555555"
 	callbackParams := gotwilio.NewCallbackParameters("http://example.com")
-	twilio.CallWithUrlCallbacks(from, to, callbackParams)
+	_, exception, err := twilio.CallWithUrlCallbacks(from, to, callbackParams)
+	if exception != nil {
+		log.Fatal(*exception)
+	}
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 ```
 
@@ -124,16 +140,15 @@ func main() {
 		log.Fatal(err)
 	}
 	filter := &gotwilio.UsageFilter{StartDate: "2012-6-4", EndDate: "2014-1-1"}
-	records, exception, err := twilio.DailyUsageRecords(filter)
-	if records != nil {
-		for _, record := range records.UsageRecords {
-			fmt.Printf("Category: %s, Usage: %d \n", record.Category, record.Usage)
-		}
-	} else if exception != nil {
+	records, exception, err := twilio.UsageRecordsDaily(filter)
+	if exception != nil {
 		log.Fatal(*exception)
-	} else {
-		// the only option left is that the error != nil
+	}
+	if err != nil {
 		log.Fatal(err)
+	}
+	for _, record := range records.UsageRecords {
+		fmt.Printf("Category: %s, Usage: %d \n", record.Category, record.Usage)
 	}
 }
 ```
