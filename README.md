@@ -8,7 +8,7 @@ Gotwilio is licensed under a BSD license.
 To install gotwilio, run `go get github.com/Januzellij/gotwilio`.
 
 ## Getting Started
-Just create a Twilio client with either `NewTwilioClient(accountSid, authToken)` or `NewTwilioClientFromEnvironment()`, and store the accountSid and authToken in `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` environment variables, respectively. For security purposes, please use `NewTwilioClientFromEnvironment()` in any open source code.
+Just create a Twilio client with either `NewTwilioClient(accountSid, authToken)` or `NewTwilioClientFromEnv()`, and store the accountSid and authToken in `TWILIO_ACCOUNT_SID` and `TWILIO_AUTH_TOKEN` environment variables, respectively. For security purposes, please use `NewTwilioClientFromEnv()` in any open source code.
 
 ## Docs
 All documentation can be found <a href="http://godoc.org/github.com/Januzellij/gotwilio" target="_blank">here</a>
