@@ -23,7 +23,6 @@ func TestSMS(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if exc != nil {
 		t.Fatal(exc)
 	}
@@ -36,7 +35,6 @@ func TestVoice(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if exc != nil {
 		t.Fatal(exc)
 	}
@@ -45,13 +43,12 @@ func TestVoice(t *testing.T) {
 func TestUsage(t *testing.T) {
 	twilio := NewTwilioClient(params["SID"], params["TOKEN"])
 	filter := &UsageFilter{StartDate: "2012-6-4", EndDate: "2014-1-1"}
-	_, exc, err := twilio.UsageRecords("Daily", filter)
+	records, exc, err := twilio.UsageRecordsDaily(filter)
+	if exception != nil {
+		t.Fatal(exc)
+	}
 	if err != nil {
 		t.Fatal(err)
-	}
-
-	if exc != nil {
-		t.Fatal(exc)
 	}
 }
 
@@ -66,7 +63,6 @@ func TestTwiml(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
 	if b.String() != properResponse {
 		t.Fatalf("Expected: %s, Got: %s", properResponse, b.String())
 	}
