@@ -86,9 +86,12 @@ func root(w http.ResponseWriter, r *http.Request) {
 		log.Fatal(err)
 	}
 	url := "http://example.com/"
-	err = gotwilio.Validate(r, url, twilio.authToken)
-	if err == nil {
-		// proceed as normal, the request is from Twilio
+	isValid, err := gotwilio.Validate(r, url, twilio.authToken)
+	if err != nil {
+		// the request was malformed
+	}
+	if isValid {
+		// proceed, the request is from Twilio
 	}
 }
 
